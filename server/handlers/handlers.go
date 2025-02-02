@@ -169,3 +169,55 @@ func DeleteTaskById(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).SendString("Task deleted successfully")
 
 }
+func UpdateTaskById(c *fiber.Ctx) error {
+	type Task struct {
+		ID        string `json:"id"`
+		Name      string `json:"name"`
+		Desc      string `json:"desc"`
+		IsActive  bool   `json:"isActive"`
+		DueDate   string `json:"dueDate"`  // DueDate as string, for custom parsing
+		Priority  string `json:"priority"` // Priority field
+		// Add other fields as required
+	}
+
+	var taskData Task
+	err := c.BodyParser(&taskData)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).SendString("Invalid body")
+	}
+
+	// Convert string ID to ObjectID
+	taskObjectID, err := primitive.ObjectIDFromHex(taskData.ID)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).SendString("Invalid ID format")
+	}
+
+	client, err := db.ConnectToDB()
+	defer client.Disconnect(c.Context())
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).SendString("Failed to connect to MongoDB: " + err.Error())
+	}
+
+	collection := client.Database("db").Collection("tasks")
+
+	// Prepare the update data
+	update := bson.M{
+		"$set": bson.M{
+			"name":       taskData.Name,
+			"desc":       taskData.Desc,
+			"isActive":   taskData.IsActive,
+			"dueDate":    taskData.DueDate,
+			"priority":   taskData.Priority,
+			"updatedAt" : time.Now(),
+		},
+	}
+
+	// Update the task by ID
+	_, err = collection.UpdateOne(c.Context(), bson.M{"_id": taskObjectID}, update)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).SendString("Error updating task: " + err.Error())
+	}
+
+	// Return success response
+	return c.Status(http.StatusOK).SendString("Task updated successfully")
+}
