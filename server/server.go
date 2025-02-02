@@ -9,8 +9,8 @@ func main() {
 
 	app := fiber.New()
 	app.Get("/",handlers.GetAllTasks)
-	app.Post("/new-task",handlers.InsertTask)
-
-
+	app.Post("/task",handlers.InsertTask)
+	app.Get("task",handlers.FindTaskById)
+	app.Delete("/task",handlers.DeleteTaskById)
 	app.Listen(":8080")
 }
