@@ -190,8 +190,8 @@
 		taskObjectID, err := primitive.ObjectIDFromHex(taskData.ID)
 		if err != nil {
 			return c.Status(http.StatusBadRequest).SendString("Invalid ID format")
-		}
 
+		}
 		client, err := db.ConnectToDB()
 		defer client.Disconnect(c.Context())
 		if err != nil {
