@@ -23,7 +23,7 @@ const TaskList = () => {
   return (
     <div className="h-full w-full "> 
    
-    <div className="p-6 grid grid-cols-1 h-full w-full  bg-[#eed7c5] sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="p-6 grid grid-cols-1 md:py-10 h-full w-full overflow-y-scroll bg-[#eed7c5] sm:grid-cols-2 lg:grid-cols-4 gap-3" style={{scrollbarWidth:"none"}}>
       {tasks.length > 0 ? (
           tasks.map((task) => <TaskCard key={task.id} task={task} />)
         ) : (

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const TaskCard = ({ task }) => {
   const [priority, setPriority] = useState(task.priority);
   const [isActive, setIsActive] = useState(task.isActive);
-
+    const navigator = useNavigate()
   // Limit description to 100 characters
   const truncatedDesc =
     task.desc.length > 100 ? task.desc.slice(0, 100) + "..." : task.desc;
@@ -16,7 +16,7 @@ const TaskCard = ({ task }) => {
     >
       {/* Task Title & Description */}
       <h2 className="text-xl font-semibold text-gray-900 mb-2">{task.name}</h2>
-      <p className="text-sm text-gray-700 mt-1 leading-tight mb-4">{truncatedDesc}</p>
+      <p className="text-sm text-gray-700 mt-1 leading-tight mb-4">{truncatedDesc || "no desc available" } </p>
 
       {/* Status Dropdown */}
       <div className="mt-4 w-full">
@@ -26,8 +26,8 @@ const TaskCard = ({ task }) => {
           onChange={(e) => setIsActive(e.target.value === "true")}
           className="w-full mt-1 p-2 text-sm text-gray-800 border bg-gray-50 border-gray-400 rounded-md focus:ring-2 focus:ring-indigo-600 focus:outline-none"
         >
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
+          <option value={isActive}>{isActive ?"Active":"Inactive"}</option>
+        
         </select>
       </div>
 
@@ -54,6 +54,7 @@ const TaskCard = ({ task }) => {
           </button>
         ))}
       </div>
+      <button className="bg-blue-600 rounded-md w-full  mt-4 text-white py-1 text-xl" onClick={()=>{navigator(`/edit-task/${task._id}`)}} >Edit</button>
     </div>
   );
 };

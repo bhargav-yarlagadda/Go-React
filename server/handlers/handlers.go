@@ -101,38 +101,37 @@
 	}
 
 	func FindTaskById(c *fiber.Ctx) error {
-		type Task struct {
-			ID string `json:"id"`
+		
+	
+		// Retrieve the dynamic id from the URL parameter
+		taskId := c.Params("id")
+		if taskId == "" {
+			return c.Status(http.StatusBadRequest).SendString("Task ID is required")
 		}
-
-		var taskId Task
-		err := c.BodyParser(&taskId)
-		if err != nil {
-			return c.Status(http.StatusBadRequest).SendString("Invalid body")
-		}
-
+	
 		// Convert string ID to ObjectID
-		taskObjectID, err := primitive.ObjectIDFromHex(taskId.ID)
+		taskObjectID, err := primitive.ObjectIDFromHex(taskId)
 		if err != nil {
 			return c.Status(http.StatusBadRequest).SendString("Invalid ID format")
 		}
-
+	
 		client, err := db.ConnectToDB()
 		defer client.Disconnect(c.Context())
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).SendString("Failed to connect to MongoDB: " + err.Error())
 		}
-
+	
 		collection := client.Database("db").Collection("tasks")
 		var result bson.M
 		err = collection.FindOne(c.Context(), bson.M{"_id": taskObjectID}).Decode(&result)
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).SendString("Error fetching task: " + err.Error())
 		}
-
+	
 		// Return the result as JSON
 		return c.Status(200).JSON(result)
 	}
+	
 
 	func DeleteTaskById(c *fiber.Ctx) error {
 		type Task struct {

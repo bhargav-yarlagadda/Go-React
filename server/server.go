@@ -17,8 +17,8 @@ func main() {
     }))
 	app.Get("/",handlers.GetAllTasks)
 	app.Post("/task",handlers.InsertTask)
-	app.Get("task",handlers.FindTaskById)
-	app.Delete("/task",handlers.DeleteTaskById)
+	app.Get("/task/:id",handlers.FindTaskById)
+	app.Delete("/task/",handlers.DeleteTaskById)
 	app.Put("/task",handlers.UpdateTaskById)
 	app.Listen(":8080")
 	

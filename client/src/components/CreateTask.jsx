@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const CreateTask = () => {
+  const navigate = useNavigate()
   const [task, setTask] = useState({
     name: "",
     description: "",
@@ -31,7 +32,7 @@ const CreateTask = () => {
         dueDate: "",
         priority: "low",
       });
-      Navigate('/')
+      navigate('/')
     } catch (error) {
       console.error("Error submitting task:", error);
     }
