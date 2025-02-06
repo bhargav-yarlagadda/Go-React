@@ -11,7 +11,7 @@ const TaskCard = ({ task }) => {
   return (
     <div
       className={`rounded-xl bg-[#ffd6ff] max-h-[400px] p-5 py-10 w-72 border border-gray-300 shadow-xl hover:shadow-2xl transition-all duration-300 ease-in-out transform ${
-        isActive ? "hover:border-indigo-500" : "opacity-80"
+        isActive ? "hover:border-indigo-500" : "opacity-75"
       }`}
     >
       {/* Task Title & Description */}
